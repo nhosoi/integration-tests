@@ -219,6 +219,39 @@ CONTAINER_ID=$7
 CONTAINER_ID_FULL=$8
 EOF
         fi
+        rnd=`shuf -i 1-10 -n 1`
+        if [ $rnd -lt 4 ] ; then
+            tee -a /tmp/junk <<EOF
+MESSAGE_ID=`journalctl --new-id | sed '2q;d'`
+CODE_FILE=../src/core/manager_$rnd.c
+CODE_LINE=$rnd
+CODE_FUNCTION=process_event_$rnd
+ERRNO=$rnd
+SYSLOG_PID=$rnd
+EOF
+        elif [ $rnd -lt 7 ] ; then
+            tee -a /tmp/junk <<EOF
+_EXE=/usr/lib64/firefox/firefox
+_CMDLINE=/usr/lib64/firefox/firefox -new-instance -P default
+_AUDIT_SESSION=1
+_AUDIT_LOGINUID=1000
+_SYSTEMD_CGROUP=/user.slice/user-1000.slice/session-1.scope
+_SYSTEMD_SESSION=1
+_SYSTEMD_UNIT=systemd-journald.service
+_SYSTEMD_USER_UNIT=this-is-systemd-user-unit
+_SYSTEMD_OWNER_UID=1000
+_SELINUX_CONTEXT=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+_MACHINE_ID=68fe516b647f4d0fb5b0439d57b79344
+EOF
+        else
+            tee -a /tmp/junk <<EOF
+_KERNEL_DEVICE=+pci_bus:0000:00
+_KERNEL_SUBSYSTEM=pci_bus
+_UDEV_SYSNAME=usb4
+_UDEV_DEVNODE=/dev/bus/usb/001/001
+_UDEV_DEVLINK=/dev/alias1
+EOF
+        fi
         echo "" | tee -a /tmp/junk
     else
         echo "$msg"
