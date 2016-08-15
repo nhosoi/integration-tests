@@ -354,7 +354,7 @@ myhost=localhost myproject=.operations myfield=ident mymessage=$prefix wait_unti
 
 iii=1
 while [ $iii -le $NPROJECTS ] ; do
-    myproject=`printf "%s${NPFMT}" $projprefix $iii`
+    myproject=`printf "project.%s${NPFMT}" $projprefix $iii`
     myhost=localhost myproject=$myproject myfield=message mymessage=$prefix wait_until_cmd count_ge_nmessages 60 1 || {
         echo error: $NMESSAGES messages not found in $myproject
         curl_es localhost $myproject _search message $prefix | python -mjson.tool
